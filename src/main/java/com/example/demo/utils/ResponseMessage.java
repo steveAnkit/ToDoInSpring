@@ -1,11 +1,16 @@
 package com.example.demo.utils;
 
 public class ResponseMessage {
-public static final String ERROR_UNAUTHORIZED = "UnAuthorized User";
+	
+	public static final String ERROR_UNAUTHORIZED = "UnAuthorized User";
 	
     public static final String TASK_CREATED ="New task has been created";
     
     public static final String TASK_CREATION_FAILED ="New task creation has failed";
+    
+    public static final String FAILED ="Failed";
+    
+    public static final String TASK_LIST_FAILED ="Fetshing Task List Has failed";
 
 	public static final String ERROR_USERNAME_PASSWORD_MISMATCH ="Username and password mismatch Exception.";
 	

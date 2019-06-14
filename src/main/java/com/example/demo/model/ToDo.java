@@ -29,6 +29,8 @@ public class ToDo {
 	private String userName;
 	
 	private Date targetDate;
+	
+	private Boolean hide;
 
 	public ToDo() {
 		super();
@@ -36,11 +38,12 @@ public class ToDo {
 	}
 
 	public ToDo(@Size(min = 10, message = "Enter at least 10 characters...") String description, String userName,
-			Date targetDate) {
+			Date targetDate, Boolean hide) {
 		super();
 		this.description = description;
 		this.userName = userName;
 		this.targetDate = targetDate;
+		this.hide = hide;
 	}
 
 	public long getId() {
@@ -73,6 +76,14 @@ public class ToDo {
 
 	public void setTargetDate(Date targetDate) {
 		this.targetDate = targetDate;
+	}
+
+	public Boolean getHide() {
+		return hide;
+	}
+
+	public void setHide(Boolean hide) {
+		this.hide = hide;
 	}
 	
 	
