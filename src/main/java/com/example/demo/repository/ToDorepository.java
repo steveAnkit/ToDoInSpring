@@ -14,7 +14,7 @@ import com.example.demo.model.ToDo;
 @Repository
 public interface ToDorepository extends JpaRepository<ToDo, Long>{
 	
-   List<ToDo> findByUserName(String userName);
+	/* List<ToDo> findByUserName(String userName); */
    
    List<ToDo> findAll();
    
@@ -29,10 +29,14 @@ public interface ToDorepository extends JpaRepository<ToDo, Long>{
 	 * unsynchronized
 	 */
    
-   @Transactional
-   @Modifying(clearAutomatically = true)
-   @Query(value = "update todos set hide = 1 where id = :taskId ", nativeQuery = true )
-   int deleteTask(@Param("taskId") int taskId);
+	
+	  @Transactional
+	  
+	  @Modifying(clearAutomatically = true)
+	  
+	  @Query(value = "update todos set hide = 1 where id = :taskId ", nativeQuery =
+	  true ) int deleteTask(@Param("taskId") int taskId);
+	 
    
    
 }

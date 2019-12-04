@@ -12,6 +12,7 @@
 	<artifactId>TO-DO</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>TO-DO</name>
+	
 	<description>It is a to do list project</description>
 
 	<properties>
@@ -51,6 +52,14 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
 		</dependency>
 	</dependencies>
 
