@@ -22,6 +22,7 @@ import com.example.demo.repository.ToDorepository;
 import com.example.demo.utils.ResponseMessage;
 
 @RestController
+@RequestMapping("api/v1")
 public class ToDoController extends ResponseHandler {
 
 	@Autowired
