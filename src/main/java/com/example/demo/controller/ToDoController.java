@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.model.ToDo;
 import com.example.demo.repository.ToDoRedisRepositoryImpl;
@@ -47,11 +49,7 @@ public class ToDoController extends ResponseHandler {
 
 	}
 
-	/*
-	 * @RequestMapping(path = "/toDos", method = RequestMethod.GET) public
-	 * List<ToDo> getToDo(@RequestParam String ) { return toDorepository.findAll();
-	 * }
-	 */
+	
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
 	public String getstart() {
@@ -63,8 +61,20 @@ public class ToDoController extends ResponseHandler {
 		HashMap<String, String> errors = new HashMap<String, String>();
 		HashMap<String, String> warnings = new HashMap<String, String>();
 		if (toDo != null) {
-			toDorepository.save(toDo);
-			return successResponse(ResponseMessage.TASK_CREATED, warnings, errors, toDo);
+		 ToDo SavedTask	=  toDorepository.save(toDo);
+			
+			/*
+			 * This is the best practice of sending the HTTP Status Code and location of the
+			 * created resource
+			 */
+			
+	 URI location =  ServletUriComponentsBuilder
+		 		.fromCurrentRequest()
+		 		.path("/{taskID}")
+		 		.buildAndExpand(SavedTask.getId())
+		 		.toUri();
+			
+			return ResponseEntity.created(location).build();
 
 		} else {
 			return errorResponse(ResponseMessage.TASK_CREATION_FAILED, warnings, errors);
