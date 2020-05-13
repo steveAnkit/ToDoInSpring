@@ -3,23 +3,27 @@ package com.example.demo.controller;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.demo.exceptions.UserNotFoundException;
 import com.example.demo.model.ToDo;
-import com.example.demo.repository.ToDoRedisRepositoryImpl;
 import com.example.demo.repository.ToDorepository;
 import com.example.demo.utils.ResponseMessage;
 
@@ -30,10 +34,14 @@ public class ToDoController extends ResponseHandler {
 	@Autowired
 	private ToDorepository toDorepository;
 	
-	@Autowired
-	private ToDoRedisRepositoryImpl redisBusiness;
+	@GetMapping(path = "/")
+	public String getstart() {
+		return "started";
+	}
 
-	@RequestMapping(path = "/toDos", method = RequestMethod.GET)
+
+
+	@GetMapping(path = "/toDos")
 	public ResponseEntity<?> getToDos() {
 		List<ToDo> toDos = null;
 		HashMap<String, String> errors = new HashMap<String, String>();
@@ -50,30 +58,35 @@ public class ToDoController extends ResponseHandler {
 	}
 
 	
-
-	@RequestMapping(path = "/", method = RequestMethod.GET)
-	public String getstart() {
-		return "started";
+	@GetMapping("/toDo/{taskId}")
+	public Optional<ToDo> getTask(@PathVariable long taskId)
+	{
+		Optional<ToDo> toDo =  toDorepository.findById(taskId);
+		
+		if(toDo.isPresent())
+		{
+			return toDo;
+		}
+		else {
+			 throw new UserNotFoundException("Task not found for task id: "+ taskId );
+		}
 	}
-
-	@RequestMapping(path = "/toDos", method = RequestMethod.POST)
-	public ResponseEntity<?> addToDo(@RequestBody ToDo toDo, HttpServletRequest request, HttpServletResponse response) {
+	
+	@PostMapping(path = "/toDos")
+	public ResponseEntity<?> addToDo(@Valid @RequestBody ToDo toDo, HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, String> errors = new HashMap<String, String>();
 		HashMap<String, String> warnings = new HashMap<String, String>();
 		if (toDo != null) {
-		 ToDo SavedTask	=  toDorepository.save(toDo);
-			
+			ToDo SavedTask = toDorepository.save(toDo);
+
 			/*
 			 * This is the best practice of sending the HTTP Status Code and location of the
 			 * created resource
 			 */
-			
-	 URI location =  ServletUriComponentsBuilder
-		 		.fromCurrentRequest()
-		 		.path("/{taskID}")
-		 		.buildAndExpand(SavedTask.getId())
-		 		.toUri();
-			
+
+			URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{taskID}")
+					.buildAndExpand(SavedTask.getId()).toUri();
+
 			return ResponseEntity.created(location).build();
 
 		} else {
@@ -96,18 +109,6 @@ public class ToDoController extends ResponseHandler {
 
 		}
 	}
-	
+
 }
 
-
-/*
- * @GetMapping("/toDos") public ResponseEntity<?> getArchivedTasks() {
- * 
- * HashMap<String, String> errors = new HashMap<String, String>();
- * HashMap<String, String> warnings = new HashMap<String, String>();
- * 
- * 
- * 
- * 
- * }
- */
